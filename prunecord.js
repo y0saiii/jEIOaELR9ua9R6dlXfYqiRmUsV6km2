@@ -2333,10 +2333,18 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
 
   async function applyToken(raw, opts = {}) {
     if (!raw) return false;
-    token = String(raw).replace(/^"|"$/g, '').trim();
+    const candidate = String(raw).replace(/^"|"$/g, '').trim();
+    if (!candidate) return false;
+    const previous = token;
+    token = candidate;
     userId = null; username = null; avatar = null;
+    const uid = await resolveUser();
+    if (!uid) {
+      token = previous;
+      if (!opts.silent) toast('That token did not work, check it and try again.', 'err');
+      return false;
+    }
     try { await store.set({ token: await encryptSecret(token) }); } catch {}
-    await resolveUser();
     updateUserbar();
     updateSessionSecretUI();
     updateTokenOverlay();
@@ -2397,8 +2405,8 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
     if (st) st.textContent = 'Reading the authorization Discord is already using.';
     let t = null;
     try { t = await detectToken(); } catch {}
-    if (t) {
-      await applyToken(t, { silent: true });
+    const ok = t ? await applyToken(t, { silent: true }) : false;
+    if (ok) {
       if (st) st.textContent = 'Linked. Auto-detect found your session.';
       toast('Token detected, session linked.', 'ok');
     } else {
@@ -2412,11 +2420,8 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
     let found = null;
     try { found = await detectToken(); } catch {}
     if (!shadow) return;
-    if (found) {
-      await applyToken(found, { silent: true });
-    } else {
-      updateTokenOverlay();
-    }
+    const ok = found ? await applyToken(found, { silent: true }) : false;
+    if (!ok) updateTokenOverlay();
     const ch = detectChannelId();
     const inp = shadow.getElementById('pc-ch');
     if (ch && inp && !inp.value.trim()) {
@@ -2437,10 +2442,14 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
     save.addEventListener('click', async () => {
       const v = inp.value.trim(); if (!v) return;
       save.textContent = 'Saving'; save.disabled = true;
-      await applyToken(v, { silent: true });
-      inp.value = '';
+      const ok = await applyToken(v, { silent: true });
       save.textContent = 'Save'; save.disabled = false;
-      toast('Session linked successfully.', 'ok');
+      if (ok) {
+        inp.value = '';
+        toast('Session linked successfully.', 'ok');
+      } else {
+        toast('That token did not work, check it and try again.', 'err');
+      }
     });
     inp.addEventListener('keydown', e => { if (e.key === 'Enter') save.click(); });
   }
