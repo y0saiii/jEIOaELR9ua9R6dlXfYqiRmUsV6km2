@@ -2,6 +2,35 @@
   if (window.__prunecordLoaded) { window.__prunecordToggle?.(); return; }
   window.__prunecordLoaded = true;
 
+  const PC_ROOT = () => document.getElementById('prunecord-root');
+  const PC_IN = (ev) => {
+    try {
+      const root = PC_ROOT();
+      if (!root) return false;
+      if (ev.target === root) return true;
+      const path = typeof ev.composedPath === 'function' ? ev.composedPath() : [];
+      if (path.includes(root)) return true;
+      if (root.contains(ev.target)) return true;
+    } catch {}
+    return false;
+  };
+  ['keydown', 'keypress', 'keyup', 'beforeinput', 'compositionstart', 'compositionupdate', 'compositionend'].forEach(type => {
+    window.addEventListener(type, (ev) => {
+      if (!PC_IN(ev)) return;
+      ev.stopImmediatePropagation();
+      ev.stopPropagation();
+    }, true);
+  });
+  ['mousedown', 'pointerdown', 'click'].forEach(type => {
+    document.addEventListener(type, (ev) => {
+      const root = PC_ROOT();
+      if (!root) return;
+      if (root.contains(ev.target)) {
+        ev.stopPropagation();
+      }
+    }, true);
+  });
+
   const LOGO = chrome.runtime.getURL('assets/logo.png');
   const VER  = '4.7.0';
 
@@ -3105,11 +3134,19 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
     const feedbackBtn = shadow.getElementById('pc-feedback-send');
     const feedbackStatus = shadow.getElementById('pc-feedback-status');
     if (feedbackMsg) {
-      ['keydown', 'keyup', 'keypress', 'paste', 'cut', 'copy', 'input', 'compositionstart', 'compositionend'].forEach(evt => {
-        feedbackMsg.addEventListener(evt, e => e.stopPropagation(), true);
+      ['keydown', 'keyup', 'keypress', 'beforeinput', 'input', 'paste', 'cut', 'copy', 'compositionstart', 'compositionend'].forEach(evt => {
+        feedbackMsg.addEventListener(evt, e => {
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }, true);
+        feedbackMsg.addEventListener(evt, e => {
+          e.stopPropagation();
+        }, false);
       });
-      feedbackMsg.addEventListener('focus', e => e.stopPropagation(), true);
-      feedbackMsg.addEventListener('click', e => e.stopPropagation(), true);
+      feedbackMsg.addEventListener('focus', e => { e.stopPropagation(); feedbackMsg.focus(); }, true);
+      feedbackMsg.addEventListener('mousedown', e => { e.stopPropagation(); }, true);
+      feedbackMsg.addEventListener('pointerdown', e => { e.stopPropagation(); feedbackMsg.focus(); }, true);
+      feedbackMsg.addEventListener('click', e => { e.stopPropagation(); feedbackMsg.focus(); }, true);
     }
     const FEEDBACK_COOLDOWN = 4 * 60 * 60 * 1000;
     const blockedWords = ['baby', 'axelotl', 'axolotl'];
