@@ -2,35 +2,6 @@
   if (window.__prunecordLoaded) { window.__prunecordToggle?.(); return; }
   window.__prunecordLoaded = true;
 
-  const PC_ROOT = () => document.getElementById('prunecord-root');
-  const PC_IN = (ev) => {
-    try {
-      const root = PC_ROOT();
-      if (!root) return false;
-      if (ev.target === root) return true;
-      const path = typeof ev.composedPath === 'function' ? ev.composedPath() : [];
-      if (path.includes(root)) return true;
-      if (root.contains(ev.target)) return true;
-    } catch {}
-    return false;
-  };
-  ['keydown', 'keypress', 'keyup', 'beforeinput', 'compositionstart', 'compositionupdate', 'compositionend'].forEach(type => {
-    window.addEventListener(type, (ev) => {
-      if (!PC_IN(ev)) return;
-      ev.stopImmediatePropagation();
-      ev.stopPropagation();
-    }, true);
-  });
-  ['mousedown', 'pointerdown', 'click'].forEach(type => {
-    document.addEventListener(type, (ev) => {
-      const root = PC_ROOT();
-      if (!root) return;
-      if (root.contains(ev.target)) {
-        ev.stopPropagation();
-      }
-    }, true);
-  });
-
   const LOGO = chrome.runtime.getURL('assets/logo.png');
   const VER  = '4.7.0';
 
