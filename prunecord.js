@@ -951,7 +951,7 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
 
       <div class="card">
         <div class="card-hdr">${ic('sparkles',11)} Feedback</div>
-        <span class="field-hint">Ideas, requests, anything. One message every 4 hours, your token is never included.</span>
+        <span class="field-hint">Ideas, requests, anything. One message every 4 hours. Click the box and type, Discord won\'t steal focus.</span>
         <textarea id="pc-feedback-msg" class="inp" rows="3" placeholder="Enter your feedback..." spellcheck="false"></textarea>
         <div class="act-row">
           <button id="pc-feedback-send" class="btn btn-primary">${ic('send',13)} Send Feedback</button>
@@ -1268,10 +1268,10 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
 
     <div class="pane" data-pane="download">
       <div class="card">
-        <div class="card-hdr">${ic('download',11)} Message Archive</div>
-        <span class="field-hint">Save messages from a channel, a DM, or an entire server into a file you keep.</span>
+        <div class="card-hdr">${ic('download',11)} Download Messages</div>
+        <span class="field-hint">Pick where to download from, choose a format, done.</span>
         <div class="mode-row">
-          <span class="card-hdr">Source</span>
+          <span class="card-hdr">From</span>
           <div class="seg" id="pc-dl-src">
             <button class="seg-btn active" data-src="channel">Channel</button>
             <button class="seg-btn" data-src="server">Server</button>
@@ -1282,102 +1282,44 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
           <button id="pc-dl-detect" class="icon-btn" title="Auto-detect from the current Discord page">${ic('refresh',15)}</button>
         </div>
         <span class="field-hint" id="pc-dl-src-hint">Open the channel or DM you want, then click refresh.</span>
-        <div class="act-row" id="pc-dl-dm-row">
-          <button id="pc-dl-load-dms" class="btn btn-glass btn-sm">${ic('message',12)} Load my DMs</button>
-        </div>
-        <select id="pc-dl-dm" class="inp hidden"></select>
       </div>
 
       <div class="card">
-        <div class="card-hdr">${ic('clock',11)} Time Range</div>
-        <label class="toggle"><div class="tog-sw"><input id="pc-dl-all" type="checkbox" checked /><span class="slider"></span></div><div class="tog-txt"><span class="tog-title">Everything</span><span class="tog-sub">No date limits at all</span></div></label>
+        <div class="card-hdr">${ic('layers',11)} Format</div>
+        <select id="pc-dl-format" class="inp">
+          <option value="html">HTML page, media links</option>
+          <option value="zip">HTML page with media, ZIP</option>
+          <option value="json">JSON, full data</option>
+          <option value="txt">Plain text</option>
+          <option value="csv">CSV, spreadsheet</option>
+        </select>
+        <span class="field-hint" id="pc-dl-format-hint">Media links come from Discord and can expire. The ZIP option saves images, GIFs and videos inside the archive so they keep working.</span>
+        <div class="divider"></div>
+        <label class="toggle"><div class="tog-sw"><input id="pc-dl-mine" type="checkbox" checked /><span class="slider"></span></div><div class="tog-txt"><span class="tog-title">Only my messages</span><span class="tog-sub">Leave other people's messages out</span></div></label>
+        <label class="toggle"><div class="tog-sw"><input id="pc-dl-all" type="checkbox" checked /><span class="slider"></span></div><div class="tog-txt"><span class="tog-title">Everything</span><span class="tog-sub">No date limits</span></div></label>
         <div id="pc-dl-time" class="hidden">
           <div class="date-row">
             <div class="date-field"><label class="sub-lbl" for="pc-dl-after">After</label><input id="pc-dl-after" type="date" class="inp" /></div>
             <span class="date-sep">-</span>
             <div class="date-field"><label class="sub-lbl" for="pc-dl-before">Before</label><input id="pc-dl-before" type="date" class="inp" /></div>
           </div>
-          <div class="act-row" style="flex-wrap:wrap;margin-top:8px">
-            <button class="btn btn-glass btn-sm" data-dl-preset="7">Last 7 days</button>
-            <button class="btn btn-glass btn-sm" data-dl-preset="30">30 days</button>
-            <button class="btn btn-glass btn-sm" data-dl-preset="90">90 days</button>
-            <button class="btn btn-glass btn-sm" data-dl-preset="365">1 year</button>
-          </div>
         </div>
-        <div class="divider"></div>
-        <label class="sub-lbl" for="pc-dl-max">Message limit, 0 means no limit</label>
-        <input id="pc-dl-max" type="number" class="inp mono" min="0" step="100" value="0" />
-      </div>
-
-      <div class="card">
-        <div class="card-hdr">${ic('filter',11)} Filters</div>
-        <div class="toggles tog-grid">
-          <label class="toggle"><div class="tog-sw"><input id="pc-dl-mine" type="checkbox" checked /><span class="slider"></span></div><div class="tog-txt"><span class="tog-title">Only mine</span><span class="tog-sub">Messages you sent</span></div></label>
-          <label class="toggle"><div class="tog-sw"><input id="pc-dl-bots" type="checkbox" checked /><span class="slider"></span></div><div class="tog-txt"><span class="tog-title">Skip bots</span><span class="tog-sub">Leave bot authors out</span></div></label>
-          <label class="toggle"><div class="tog-sw"><input id="pc-dl-att" type="checkbox" checked /><span class="slider"></span></div><div class="tog-txt"><span class="tog-title">Attachments</span><span class="tog-sub">Keep file links</span></div></label>
-          <label class="toggle"><div class="tog-sw"><input id="pc-dl-embeds" type="checkbox" checked /><span class="slider"></span></div><div class="tog-txt"><span class="tog-title">Embeds</span><span class="tog-sub">Keep link previews</span></div></label>
-        </div>
-        <div class="divider"></div>
-        <label class="sub-lbl" for="pc-dl-kw">Keyword or regex</label>
-        <input id="pc-dl-kw" type="text" class="inp" placeholder="text or /pattern/flags" spellcheck="false" />
-        <label class="sub-lbl" for="pc-dl-author">Only this author ID, optional</label>
-        <input id="pc-dl-author" type="text" class="inp mono" placeholder="User ID" spellcheck="false" />
-      </div>
-
-      <div class="card">
-        <div class="card-hdr">${ic('layers',11)} Export Format</div>
-        <select id="pc-dl-format" class="inp">
-          <option value="json">JSON, complete data</option>
-          <option value="ndjson">NDJSON, one message per line</option>
-          <option value="txt">Plain text</option>
-          <option value="md">Markdown</option>
-          <option value="html">HTML, styled page</option>
-          <option value="csv">CSV, spreadsheet ready</option>
-        </select>
-        <label class="toggle"><div class="tog-sw"><input id="pc-dl-pretty" type="checkbox" checked /><span class="slider"></span></div><div class="tog-txt"><span class="tog-title">Readable output</span><span class="tog-sub">Pretty JSON, headers, spacing</span></div></label>
       </div>
 
       <div class="act-row">
         <button id="pc-dl-start" class="btn btn-primary">${ic('download',13)} Start Download</button>
-        <button id="pc-dl-pause" class="btn btn-glass" disabled>${ic('pause',13)} Pause</button>
         <button id="pc-dl-stop" class="btn btn-danger" disabled>${ic('x',13)} Stop</button>
       </div>
 
       <div class="prog-card hidden" id="pc-dl-prog">
-        <div class="chips">
-          <div class="chip"><span class="chip-v" id="pc-dl-v-msg">0</span><span class="chip-l">Messages</span></div>
-          <div class="chip"><span class="chip-v" id="pc-dl-v-page">0</span><span class="chip-l">Pages</span></div>
-          <div class="chip"><span class="chip-v" id="pc-dl-v-ch">0</span><span class="chip-l">Channels</span></div>
-          <div class="chip"><span class="chip-v" id="pc-dl-v-skip">0</span><span class="chip-l">Skipped</span></div>
-        </div>
-        <div class="run-meta">
-          <span>${ic('clock',10)}<span id="pc-dl-elapsed">0:00</span></span>
-          <span>${ic('bar',10)}<span id="pc-dl-rate">0/min</span></span>
-        </div>
+        <div class="run-meta"><span><span class="pulse"></span> <span id="pc-dl-cur">Starting</span></span><span id="pc-dl-count">0 messages</span></div>
         <div class="prog-track"><div id="pc-dl-fill" class="prog-fill run"></div></div>
-        <div class="cur-row"><span class="cur-name" id="pc-dl-cur">Waiting</span><span class="cur-ct" id="pc-dl-cur-ct"></span></div>
-        <div class="log-wrap">
-          <div class="log-actions"><span class="log-title">Download log</span><button class="log-export" id="pc-dl-export">${ic('download',11)} Export</button></div>
-          <div class="log-box" id="pc-dl-log"></div>
-        </div>
+        <span class="field-hint" id="pc-dl-sub">Reading messages.</span>
       </div>
 
       <div class="card hidden" id="pc-dl-result">
-        <div class="card-hdr">${ic('check',11)} Archive ready</div>
-        <div class="stat-grid">
-          <div class="stat"><span class="stat-v" id="pc-dl-count">0</span><span class="stat-l">Messages</span></div>
-          <div class="stat"><span class="stat-v" id="pc-dl-size">0 KB</span><span class="stat-l">File size</span></div>
-        </div>
-        <div class="act-row">
-          <button id="pc-dl-save" class="btn btn-primary">${ic('download',13)} Save again</button>
-          <button id="pc-dl-copy" class="btn btn-glass">${ic('copy',13)} Copy</button>
-        </div>
+        <div class="card-hdr">${ic('check',11)} Saved</div>
         <span class="field-hint" id="pc-dl-result-hint"></span>
-      </div>
-
-      <div class="card hidden" id="pc-dl-preview-card">
-        <div class="card-hdr">${ic('scroll',11)} Preview</div>
-        <div class="dash-recent" id="pc-dl-preview"></div>
       </div>
     </div>
 
@@ -2017,7 +1959,7 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
     { tab: 'server', title: 'Server', text: 'Purges your messages from every channel of a whole server at once. Pick your servers carefully, there is no undo.' },
     { tab: 'ghost', title: 'Ghost', text: 'Scans servers you do not own and wipes your messages from them. It asks you to confirm before touching anything.' },
     { tab: 'dms', title: 'DMs', text: 'Cleans up your past direct messages, one chat at a time. Tick the chats you want and let it run.' },
-    { tab: 'download', title: 'Download', text: 'Archives messages instead of deleting them. Choose a channel, a DM or a whole server, set a date range, add filters, then export as JSON, text, Markdown, HTML or CSV.' },
+    { tab: 'download', title: 'Download', text: 'Saves a clean copy of messages. Pick a channel or server, choose HTML, ZIP with media, JSON, text or CSV, and download.' },
     { tab: 'settings', title: 'Config', text: 'Your controls, delay between deletions, Safe Mode, Dry Run, where logs appear, and progress notifications.' },
     { tab: 'help', title: 'Help', text: 'Every feature is explained here with safety tips. If you are ever confused, this tab is your best friend.' },
   ];
@@ -3162,6 +3104,13 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
     const feedbackMsg = shadow.getElementById('pc-feedback-msg');
     const feedbackBtn = shadow.getElementById('pc-feedback-send');
     const feedbackStatus = shadow.getElementById('pc-feedback-status');
+    if (feedbackMsg) {
+      ['keydown', 'keyup', 'keypress', 'paste', 'cut', 'copy', 'input', 'compositionstart', 'compositionend'].forEach(evt => {
+        feedbackMsg.addEventListener(evt, e => e.stopPropagation(), true);
+      });
+      feedbackMsg.addEventListener('focus', e => e.stopPropagation(), true);
+      feedbackMsg.addEventListener('click', e => e.stopPropagation(), true);
+    }
     const FEEDBACK_COOLDOWN = 4 * 60 * 60 * 1000;
     const blockedWords = ['baby', 'axelotl', 'axolotl'];
     const isBlocked = text => {
@@ -3337,52 +3286,32 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
 
   const DL = {
     src: 'channel',
+    title: 'Discord archive',
     collected: [],
-    text: '',
-    ext: 'json',
+    running: false,
+    stopped: false,
+    zipUrl: '',
     fileName: '',
-    blobUrl: '',
-    pages: 0,
-    skipped: 0,
-    channels: 0,
   };
 
   const dlEl = id => shadow.getElementById(id);
 
-  function dlUpdateCounters() {
-    dlEl('pc-dl-v-msg').textContent = fmtNum(DL.collected.length);
-    dlEl('pc-dl-v-page').textContent = fmtNum(DL.pages);
-    dlEl('pc-dl-v-ch').textContent = fmtNum(DL.channels);
-    dlEl('pc-dl-v-skip').textContent = fmtNum(DL.skipped);
+  function dlUpdate(count, label, sub) {
+    const c = dlEl('pc-dl-count');
+    if (c) c.textContent = `${fmtNum(count)} message${count === 1 ? '' : 's'}`;
+    if (label) { const el = dlEl('pc-dl-cur'); if (el) el.textContent = label; }
+    if (sub) { const el = dlEl('pc-dl-sub'); if (el) el.textContent = sub; }
   }
 
-  function dlRenderPreview() {
-    const card = dlEl('pc-dl-preview-card');
-    const box = dlEl('pc-dl-preview');
-    if (!card || !box) return;
-    if (!DL.collected.length) { card.classList.add('hidden'); return; }
-    card.classList.remove('hidden');
-    box.innerHTML = DL.collected.slice(-6).reverse().map(m => `
-      <div class="dr-line"><span class="dr-tag">${esc((m.author?.username || '?').slice(0, 9))}</span><span>${esc((m.content || '[attachment or embed]').slice(0, 80))}</span></div>`).join('');
-  }
-
-  function dlKeeps(msg, o) {
+  function dlKeep(msg, o) {
+    if (o.mine && userId && msg.author?.id !== userId) return false;
     const when = new Date(msg.timestamp || snowflakeDate(msg.id));
     if (o.after && when < o.after) return false;
     if (o.before && when > o.before) return false;
-    if (o.mine && userId && msg.author?.id !== userId) return false;
-    if (o.skipBots && msg.author?.bot) return false;
-    if (o.author && msg.author?.id !== o.author) return false;
-    if (o.matcher) {
-      const hay = (msg.content || '') + ' ' +
-        (msg.attachments || []).map(a => a.filename || '').join(' ') + ' ' +
-        (msg.embeds || []).map(e => `${e.title || ''} ${e.description || ''}`).join(' ');
-      if (!o.matcher(hay)) return false;
-    }
     return true;
   }
 
-  function dlEntry(msg, withAtt, withEmb) {
+  function dlEntry(msg) {
     return {
       id: msg.id,
       channel_id: msg.channel_id,
@@ -3392,55 +3321,393 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
         id: msg.author?.id ?? null,
         username: msg.author?.username ?? null,
         global_name: msg.author?.global_name ?? null,
+        avatar: msg.author?.avatar ?? null,
         bot: !!msg.author?.bot,
       },
       content: msg.content || '',
-      attachments: withAtt ? (msg.attachments || []).map(a => ({ id: a.id, filename: a.filename, url: a.url, size: a.size, content_type: a.content_type || null })) : [],
-      embeds: withEmb ? (msg.embeds || []).map(e => ({ type: e.type || null, url: e.url || null, title: e.title || null, description: e.description || null })) : [],
-      mentions: (msg.mentions || []).map(u => ({ id: u.id, username: u.username })),
-      reactions: (msg.reactions || []).map(r => ({ emoji: r.emoji?.name || null, count: r.count || 0 })),
-      pinned: !!msg.pinned,
-      type: msg.type,
+      attachments: (msg.attachments || []).map(a => ({
+        id: a.id,
+        filename: a.filename,
+        url: a.url,
+        size: a.size,
+        content_type: a.content_type || null,
+      })),
+      embeds: (msg.embeds || []).map(e => ({
+        type: e.type || null,
+        url: e.url || null,
+        title: e.title || null,
+        description: e.description || null,
+        image: e.image?.url || null,
+        thumbnail: e.thumbnail?.url || null,
+        video: e.video?.url || null,
+      })),
     };
   }
 
   async function dlCollectChannel(chId, o, label) {
     let lastId = null;
-    while (!OP.dl.stop) {
-      while (OP.dl.pause && !OP.dl.stop) await delay(200);
-      if (OP.dl.stop) return;
+    while (!DL.stopped) {
       let msgs;
       try { msgs = await fetchMsgs(chId, lastId); }
-      catch (e) { L.err('pc-dl-log', LOG_BUF.dl, `${label}: fetch failed, ${e.message}`); return; }
-      DL.pages++; dlUpdateCounters();
-      if (!msgs?.length) { L.info('pc-dl-log', LOG_BUF.dl, `${label}: no more messages.`); return; }
+      catch (e) { toast(`${label}: ${e.message}`, 'err'); return; }
+      if (!msgs?.length) return;
       for (const msg of msgs) {
-        if (OP.dl.stop) return;
-        while (OP.dl.pause && !OP.dl.stop) await delay(200);
+        if (DL.stopped) return;
         lastId = msg.id;
         const when = new Date(msg.timestamp || snowflakeDate(msg.id));
-        if (o.after && when < o.after) { L.info('pc-dl-log', LOG_BUF.dl, `${label}: reached the after date, moving on.`); return; }
-        if (!dlKeeps(msg, o)) { DL.skipped++; dlUpdateCounters(); continue; }
-        DL.collected.push(dlEntry(msg, o.att, o.emb));
-        dlUpdateCounters();
-        if (o.max && DL.collected.length >= o.max) { L.info('pc-dl-log', LOG_BUF.dl, `Message limit of ${o.max} reached.`); return; }
+        if (o.after && when < o.after) return;
+        if (!dlKeep(msg, o)) continue;
+        DL.collected.push(dlEntry(msg));
+        dlUpdate(DL.collected.length, label);
       }
       if (msgs.length < 100) return;
-      await delay(180);
+      await delay(150);
     }
   }
 
-  function dlCell(v) {
-    return '"' + String(v ?? '').replace(/"/g, '""') + '"';
+  const CRC_TABLE = (() => {
+    const t = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) {
+      let c = n;
+      for (let k = 0; k < 8; k++) c = c & 1 ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      t[n] = c >>> 0;
+    }
+    return t;
+  })();
+
+  function crc32(u8) {
+    let c = 0xFFFFFFFF;
+    for (let i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 0xFF] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
   }
 
-  function dlSerialize(fmt, pretty) {
+  function buildZip(files) {
+    const enc = new TextEncoder();
+    const now = new Date();
+    const dosTime = ((now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1)) & 0xFFFF;
+    const dosDate = (((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate()) & 0xFFFF;
+    const local = [];
+    const central = [];
+    let offset = 0;
+    for (const file of files) {
+      const name = enc.encode(file.name);
+      const data = file.data;
+      const crc = crc32(data);
+      const lh = new Uint8Array(30 + name.length);
+      const lv = new DataView(lh.buffer);
+      lv.setUint32(0, 0x04034b50, true);
+      lv.setUint16(4, 20, true);
+      lv.setUint16(6, 0x0800, true);
+      lv.setUint16(8, 0, true);
+      lv.setUint16(10, dosTime, true);
+      lv.setUint16(12, dosDate, true);
+      lv.setUint32(14, crc, true);
+      lv.setUint32(18, data.length, true);
+      lv.setUint32(22, data.length, true);
+      lv.setUint16(26, name.length, true);
+      lv.setUint16(28, 0, true);
+      lh.set(name, 30);
+      local.push(lh, data);
+      const ch = new Uint8Array(46 + name.length);
+      const cv = new DataView(ch.buffer);
+      cv.setUint32(0, 0x02014b50, true);
+      cv.setUint16(4, 20, true);
+      cv.setUint16(6, 20, true);
+      cv.setUint16(8, 0x0800, true);
+      cv.setUint16(10, 0, true);
+      cv.setUint16(12, dosTime, true);
+      cv.setUint16(14, dosDate, true);
+      cv.setUint32(16, crc, true);
+      cv.setUint32(20, data.length, true);
+      cv.setUint32(24, data.length, true);
+      cv.setUint16(28, name.length, true);
+      cv.setUint16(30, 0, true);
+      cv.setUint16(32, 0, true);
+      cv.setUint16(34, 0, true);
+      cv.setUint16(36, 0, true);
+      cv.setUint32(38, 0, true);
+      cv.setUint32(42, offset, true);
+      ch.set(name, 46);
+      central.push(ch);
+      offset += lh.length + data.length;
+    }
+    const cdSize = central.reduce((a, b) => a + b.length, 0);
+    const eocd = new Uint8Array(22);
+    const ev = new DataView(eocd.buffer);
+    ev.setUint32(0, 0x06054b50, true);
+    ev.setUint16(8, files.length, true);
+    ev.setUint16(10, files.length, true);
+    ev.setUint32(12, cdSize, true);
+    ev.setUint32(16, offset, true);
+    return new Blob([...local, ...central, eocd], { type: 'application/zip' });
+  }
+
+  function dlExt(url, fallback = 'bin') {
+    try {
+      const clean = String(url).split('?')[0].split('#')[0];
+      const m = clean.match(/\.([a-zA-Z0-9]{2,5})$/);
+      if (m) return m[1].toLowerCase();
+    } catch {}
+    return fallback;
+  }
+
+  function dlMediaKind(a) {
+    const ct = String(a.content_type || '').toLowerCase();
+    if (ct.startsWith('image/')) return 'image';
+    if (ct.startsWith('video/')) return 'video';
+    if (ct.startsWith('audio/')) return 'audio';
+    return 'file';
+  }
+
+  function dlMediaUrls(msg) {
+    const items = [];
+    for (const a of msg.attachments || []) {
+      if (a.url) items.push({ url: a.url, name: a.filename || '', kind: dlMediaKind(a) });
+    }
+    for (const e of msg.embeds || []) {
+      if (e.image) items.push({ url: e.image, name: '', kind: 'image' });
+      if (e.thumbnail) items.push({ url: e.thumbnail, name: '', kind: 'image' });
+      if (e.video) items.push({ url: e.video, name: '', kind: 'video' });
+    }
+    return items;
+  }
+
+  async function dlFetchMedia(url) {
+    const r = await fetch(url, { credentials: 'omit' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return new Uint8Array(await (await r.blob()).arrayBuffer());
+  }
+
+  function dlAvatar(a) {
+    try {
+      if (!a?.id) return '';
+      if (a.avatar) return `https://cdn.discordapp.com/avatars/${a.id}/${a.avatar}.png?size=64`;
+      const idx = Number(BigInt(a.id) >> 22n) % 6;
+      return `https://cdn.discordapp.com/embed/avatars/${idx}.png`;
+    } catch { return ''; }
+  }
+
+  function dlRich(text) {
+    return esc(text)
+      .replace(/(https?:\/\/[^\s<]+)/g, url => {
+        const href = esc(url.replace(/&amp;/g, '&'));
+        return `<a href="${href}" target="_blank" rel="noreferrer">${url}</a>`;
+      })
+      .replace(/\n/g, '<br>');
+  }
+
+  function dlMediaTag(url, label, cls, mediaMap, kind) {
+    const mapped = mediaMap && mediaMap[url];
+    const src = mapped || url;
+    const ext = dlExt(src);
+    const isImg = kind === 'image' || /^(png|jpe?g|gif|webp|avif|bmp)$/i.test(ext);
+    const isVid = kind === 'video' || /^(mp4|webm|mov|m4v)$/i.test(ext);
+    const isAud = kind === 'audio' || /^(mp3|ogg|wav|m4a|flac)$/i.test(ext);
+    if (isImg) return `<img class="${cls}" src="${esc(src)}" alt="${esc(label || '')}" loading="lazy">`;
+    if (isVid) return `<video class="${cls}" src="${esc(src)}" controls preload="metadata"></video>`;
+    if (isAud) return `<audio class="${cls}" src="${esc(src)}" controls preload="metadata"></audio>`;
+    return `<a class="file" href="${esc(src)}" target="_blank" rel="noreferrer">${esc(label || url)}</a>`;
+  }
+
+  function buildHtml(mediaMap) {
     const list = DL.collected;
-    if (fmt === 'json') return JSON.stringify(list, null, pretty ? 2 : 0);
-    if (fmt === 'ndjson') return list.map(m => JSON.stringify(m)).join('\n');
-    if (fmt === 'csv') {
+    const rows = list.map(m => {
+      const name = m.author?.global_name || m.author?.username || 'unknown';
+      const av = dlAvatar(m.author);
+      const time = m.timestamp ? new Date(m.timestamp).toLocaleString() : '';
+      const atts = (m.attachments || []).map(a => dlMediaTag(a.url, a.filename, 'att', mediaMap, dlMediaKind(a))).join('');
+      const embeds = (m.embeds || []).map(e => {
+        const media = e.image
+          ? dlMediaTag(e.image, '', 'emb-img', mediaMap, 'image')
+          : e.thumbnail
+            ? dlMediaTag(e.thumbnail, '', 'emb-img emb-thumb', mediaMap, 'image')
+            : e.video
+              ? dlMediaTag(e.video, '', 'emb-img', mediaMap, 'video')
+              : '';
+        return `<div class="embed">${e.title ? `<div class="emb-title">${esc(e.title)}</div>` : ''}${e.description ? `<div class="emb-desc">${dlRich(e.description)}</div>` : ''}${media}${e.url ? `<a class="emb-url" href="${esc(e.url)}" target="_blank" rel="noreferrer">${esc(e.url)}</a>` : ''}</div>`;
+      }).join('');
+      return `<article id="m-${esc(m.id)}" class="msg${m.author?.bot ? ' bot' : ''}">
+  <div class="ava">${av ? `<img src="${esc(av)}" alt="" loading="lazy">` : `<span>${esc(name.slice(0, 2).toUpperCase())}</span>`}</div>
+  <div class="msg-main">
+    <header><span class="name">${esc(name)}</span>${m.author?.bot ? '<span class="tag">BOT</span>' : ''}<time>${esc(time)}</time></header>
+    ${m.content ? `<div class="content">${dlRich(m.content)}</div>` : ''}
+    ${atts ? `<div class="atts">${atts}</div>` : ''}
+    ${embeds ? `<div class="embeds">${embeds}</div>` : ''}
+  </div>
+</article>`;
+    }).join('\n');
+    return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(DL.title)}</title>
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#0d0f14;color:#e6e8ec;font:15px/1.55 "Segoe UI",system-ui,-apple-system,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:36px 20px 90px}
+.hero{margin-bottom:26px;border-bottom:1px solid #232833;padding-bottom:16px}
+.hero h1{margin:0 0 6px;font-size:24px;letter-spacing:.2px}
+.hero p{margin:0;color:#8b93a3;font-size:13px}
+.msg{display:flex;gap:12px;padding:10px 12px;border-radius:12px;margin-bottom:4px}
+.msg:hover{background:rgba(255,255,255,.035)}
+.ava{width:38px;height:38px;border-radius:50%;flex:0 0 38px;overflow:hidden;background:#2b2f3a;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#cfd4dd}
+.ava img{width:100%;height:100%;object-fit:cover}
+.msg-main{min-width:0;flex:1}
+.msg-main header{display:flex;align-items:baseline;gap:8px;margin-bottom:2px;flex-wrap:wrap}
+.name{font-weight:650;color:#fff}
+.tag{font-size:9px;font-weight:800;letter-spacing:.5px;background:#5865f2;color:#fff;padding:1px 5px;border-radius:4px}
+time{font-size:11px;color:#7c8494}
+.content{color:#dfe2e8;overflow-wrap:anywhere}
+.content a,.emb-url{color:#8ab4ff;text-decoration:none}
+.content a:hover{text-decoration:underline}
+.atts{display:flex;flex-direction:column;gap:8px;margin-top:8px;max-width:560px}
+.att,.emb-img{max-width:100%;border-radius:10px;border:1px solid #262b36;background:#12151c;display:block}
+video.att,video.emb-img{width:100%}
+.emb-thumb{max-width:280px}
+.file{display:inline-block;padding:9px 12px;border:1px solid #2c3240;border-radius:9px;color:#cfd4dd;text-decoration:none;font-size:12.5px}
+.embeds{margin-top:8px;display:flex;flex-direction:column;gap:8px;max-width:560px}
+.embed{border-left:3px solid #5865f2;background:rgba(255,255,255,.03);border-radius:6px;padding:9px 12px;font-size:13px}
+.emb-title{font-weight:650;color:#fff;margin-bottom:3px}
+.emb-desc{color:#b9bfca;overflow-wrap:anywhere}
+.emb-url{font-size:11px;display:inline-block;margin-top:4px;overflow-wrap:anywhere}
+footer{margin-top:40px;text-align:center;color:#69707e;font-size:11px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero"><h1>${esc(DL.title)}</h1><p>${list.length} messages, exported ${esc(new Date().toLocaleString())}</p></div>
+  ${rows}
+  <footer>Exported with IsraelCord</footer>
+</div>
+</body>
+</html>`;
+  }
+
+  async function dlBuildMedia(mediaMap) {
+    const files = [];
+    const used = new Set();
+    let index = 0;
+    let failed = 0;
+    for (const m of DL.collected) {
+      for (const item of dlMediaUrls(m)) {
+        if (DL.stopped) break;
+        if (mediaMap[item.url]) continue;
+        const fallback = item.kind === 'video' ? 'mp4' : item.kind === 'audio' ? 'mp3' : 'png';
+        const ext = dlExt(item.url, fallback);
+        let base = item.name ? item.name.replace(/[^\w.\-]+/g, '_') : `media-${index + 1}.${ext}`;
+        if (!base.includes('.')) base += `.${ext}`;
+        let name = `assets/${base}`;
+        let n = 1;
+        while (used.has(name)) {
+          const dot = base.lastIndexOf('.');
+          const stem = dot > 0 ? base.slice(0, dot) : base;
+          const tail = dot > 0 ? base.slice(dot) : '';
+          name = `assets/${stem}-${++n}${tail}`;
+        }
+        used.add(name);
+        index++;
+        dlUpdate(DL.collected.length, 'Downloading media', `${index} files checked, keep this tab open.`);
+        try {
+          const data = await dlFetchMedia(item.url);
+          files.push({ name, data });
+          mediaMap[item.url] = name;
+        } catch {
+          failed++;
+        }
+        if (index % 20 === 0) await delay(150);
+      }
+      if (DL.stopped) break;
+    }
+    return { files, failed };
+  }
+
+  async function dlStartRun() {
+    if (DL.running) return;
+    if (!token) { toast('Link your Discord session first.', 'err'); switchTab('prune'); return; }
+    const src = DL.src;
+    const rawId = dlEl('pc-dl-ch').value.trim() || (src === 'server' ? detectGuildId() : detectChannelId()) || '';
+    if (!rawId) { toast(src === 'server' ? 'Enter a server ID.' : 'Enter a channel ID.', 'warn'); return; }
+    const all = dlEl('pc-dl-all').checked;
+    const afterVal = dlEl('pc-dl-after').value;
+    const beforeVal = dlEl('pc-dl-before').value;
+    if (!all && !afterVal && !beforeVal) { toast('Pick a date range or turn on Everything.', 'warn'); return; }
+    if (!userId) await resolveUser();
+    const o = {
+      mine: dlEl('pc-dl-mine').checked,
+      after: all || !afterVal ? null : new Date(afterVal + 'T00:00:00'),
+      before: all || !beforeVal ? null : new Date(beforeVal + 'T23:59:59.999'),
+    };
+    const format = dlEl('pc-dl-format').value;
+    DL.running = true;
+    DL.stopped = false;
+    DL.collected = [];
+    DL.title = 'Discord archive';
+    dlEl('pc-dl-result').classList.add('hidden');
+    dlEl('pc-dl-prog').classList.remove('hidden');
+    dlEl('pc-dl-fill').classList.add('run');
+    dlEl('pc-dl-start').disabled = true;
+    dlEl('pc-dl-stop').disabled = false;
+    dlUpdate(0, src === 'server' ? 'Reading channels' : 'Reading messages', 'Keep this tab open.');
+    try {
+      if (src === 'server') {
+        const info = await dfetch(`/guilds/${rawId}`);
+        if (info.ok) { const g = await info.json(); DL.title = g.name || `Server ${rawId}`; }
+        else DL.title = `Server ${rawId}`;
+        const r = await dfetch(`/guilds/${rawId}/channels`);
+        if (!r.ok) throw new Error(`Could not read the server (HTTP ${r.status}).`);
+        const chans = (await r.json()).filter(c => c.type === 0 || c.type === 5).sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+        if (!chans.length) throw new Error('That server has no readable text channels.');
+        for (let i = 0; i < chans.length && !DL.stopped; i++) {
+          const ch = chans[i];
+          dlUpdate(DL.collected.length, `#${ch.name || ch.id}`, `${i + 1} of ${chans.length} channels.`);
+          await dlCollectChannel(ch.id, o, `#${ch.name || ch.id}`);
+        }
+      } else {
+        const info = await dfetch(`/channels/${rawId}`);
+        if (info.ok) {
+          const ch = await info.json();
+          DL.title = ch.name ? `#${ch.name}` : (ch.recipients?.length ? ch.recipients.map(u => u.global_name || u.username).join(', ') : `Channel ${rawId}`);
+        } else {
+          DL.title = `Channel ${rawId}`;
+        }
+        await dlCollectChannel(rawId, o, DL.title);
+      }
+    } catch (e) {
+      toast(e.message, 'err');
+    }
+    if (!DL.collected.length) {
+      DL.running = false;
+      dlEl('pc-dl-start').disabled = false;
+      dlEl('pc-dl-stop').disabled = true;
+      dlEl('pc-dl-prog').classList.add('hidden');
+      toast(DL.stopped ? 'Stopped, nothing saved.' : 'No messages matched.', 'warn');
+      return;
+    }
+    const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+    let blob;
+    let ext;
+    let mediaCount = 0;
+    if (format === 'zip') {
+      dlUpdate(DL.collected.length, 'Downloading media', 'Saving images, GIFs and videos into the zip.');
+      const mediaMap = {};
+      const media = await dlBuildMedia(mediaMap);
+      mediaCount = media.files.length;
+      dlUpdate(DL.collected.length, 'Packing zip', `${mediaCount} media files included.`);
+      const html = buildHtml(mediaMap);
+      blob = buildZip([{ name: 'archive.html', data: new TextEncoder().encode(html) }, ...media.files]);
+      ext = 'zip';
+    } else if (format === 'html') {
+      blob = new Blob([buildHtml({})], { type: 'text/html;charset=utf-8' });
+      ext = 'html';
+    } else if (format === 'json') {
+      blob = new Blob([JSON.stringify(DL.collected, null, 2)], { type: 'application/json;charset=utf-8' });
+      ext = 'json';
+    } else if (format === 'csv') {
+      const cell = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
       const head = ['timestamp', 'id', 'channel_id', 'author_id', 'author', 'content', 'attachments', 'embeds'];
-      const rows = list.map(m => [
+      const rows = DL.collected.map(m => [
         m.timestamp,
         m.id,
         m.channel_id,
@@ -3448,173 +3715,77 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.12);box-shadow
         m.author?.username,
         m.content,
         (m.attachments || []).map(a => a.url).join(' '),
-        (m.embeds || []).map(e => e.url || e.title || '').join(' '),
-      ].map(dlCell).join(','));
-      return [head.map(dlCell).join(','), ...rows].join('\n');
+        (m.embeds || []).map(e => e.url || '').join(' '),
+      ].map(cell).join(','));
+      blob = new Blob([[head.map(cell).join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8' });
+      ext = 'csv';
+    } else {
+      const head = `${DL.title}, ${DL.collected.length} messages, exported ${new Date().toLocaleString()}\n\n`;
+      const lines = DL.collected.map(m => {
+        const atts = (m.attachments || []).map(a => `[file] ${a.url}`).join(' ');
+        return `[${new Date(m.timestamp).toLocaleString()}] ${m.author?.username || 'unknown'}: ${m.content || '[no text]'}${atts ? ' ' + atts : ''}`;
+      });
+      blob = new Blob([head + lines.join('\n\n')], { type: 'text/plain;charset=utf-8' });
+      ext = 'txt';
     }
-    if (fmt === 'html') {
-      const body = list.map(m => `
-    <article>
-      <header><strong>${esc(m.author?.username || 'unknown')}</strong><time>${esc(m.timestamp || '')}</time></header>
-      <div class="body">${esc(m.content || '').replace(/\n/g, '<br>')}</div>
-      ${(m.attachments || []).map(a => `<a class="att" href="${esc(a.url || '')}" target="_blank" rel="noreferrer">${esc(a.filename || 'attachment')}</a>`).join('')}
-      ${(m.embeds || []).map(e => `<div class="emb">${e.title ? `<b>${esc(e.title)}</b>` : ''}${e.description ? `<p>${esc(e.description)}</p>` : ''}${e.url ? `<a href="${esc(e.url)}" target="_blank" rel="noreferrer">${esc(e.url)}</a>` : ''}</div>`).join('')}
-    </article>`).join('');
-      return `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>IsraelCord archive</title>
-<style>
-:root{color-scheme:dark}
-*{box-sizing:border-box}
-body{margin:0;background:#0b0b0b;color:#e6e6e6;font:14px/1.6 'Segoe UI',system-ui,sans-serif}
-main{max-width:860px;margin:0 auto;padding:32px 20px 80px}
-h1{font-size:20px;letter-spacing:.4px;margin:0 0 6px}
-.meta{color:#8b8b8b;font-size:12px;margin-bottom:24px}
-article{border:1px solid #232323;background:#111;border-radius:10px;padding:14px 16px;margin-bottom:10px}
-article header{display:flex;justify-content:space-between;gap:12px;margin-bottom:6px;font-size:12px;color:#a9a9a9}
-article header strong{color:#fff}
-.body{white-space:pre-wrap;word-break:break-word}
-.att{display:inline-block;margin:8px 8px 0 0;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#eaeaea;text-decoration:none;font-size:12px}
-.emb{margin-top:8px;border-left:2px solid #444;padding:4px 10px;color:#bdbdbd;font-size:12.5px}
-.emb p{margin:4px 0}
-a{color:#9ecbff}
-</style></head>
-<body><main>
-<h1>IsraelCord message archive</h1>
-<div class="meta">${list.length} messages, exported ${esc(new Date().toLocaleString())}</div>
-${body}
-</main></body></html>`;
-    }
-    if (fmt === 'md') {
-      const head = pretty ? `# IsraelCord archive\n\n${list.length} messages, exported ${new Date().toLocaleString()}\n\n` : '';
-      return head + list.map(m => {
-        const atts = (m.attachments || []).map(a => `[${a.filename || 'attachment'}](${a.url || ''})`).join(' ');
-        return `**${m.author?.username || 'unknown'}**, ${m.timestamp || ''}\n\n${m.content || ''}${atts ? `\n\n${atts}` : ''}`;
-      }).join('\n\n---\n\n');
-    }
-    const head = pretty ? `IsraelCord archive, ${list.length} messages, exported ${new Date().toLocaleString()}\n\n` : '';
-    return head + list.map(m => {
-      const atts = (m.attachments || []).map(a => `[attachment] ${a.url || ''}`).join(' ');
-      const emb = (m.embeds || []).map(e => `[embed] ${e.url || e.title || ''}`).join(' ');
-      return `[${m.timestamp || ''}] ${m.author?.username || 'unknown'}: ${m.content || '[no text]'}${atts ? ' ' + atts : ''}${emb ? ' ' + emb : ''}`;
-    }).join('\n\n');
-  }
-
-  function dlSaveFile() {
-    if (!DL.blobUrl || !DL.fileName) return;
+    if (DL.zipUrl) URL.revokeObjectURL(DL.zipUrl);
+    DL.zipUrl = URL.createObjectURL(blob);
+    DL.fileName = `israelcord-${src}-${stamp}.${ext}`;
     const a = document.createElement('a');
-    a.href = DL.blobUrl;
+    a.href = DL.zipUrl;
     a.download = DL.fileName;
     document.body.appendChild(a);
     a.click();
     a.remove();
+    DL.running = false;
+    dlEl('pc-dl-start').disabled = false;
+    dlEl('pc-dl-stop').disabled = true;
+    dlEl('pc-dl-fill').classList.remove('run');
+    dlEl('pc-dl-prog').classList.add('hidden');
+    const hint = dlEl('pc-dl-result-hint');
+    if (hint) hint.textContent = `${DL.fileName}, ${fmtNum(DL.collected.length)} messages${mediaCount ? `, ${mediaCount} media files` : ''}. Check your Downloads folder.`;
+    dlEl('pc-dl-result').classList.remove('hidden');
+    toast('Archive saved.', 'ok');
   }
 
-  async function dlStartRun() {
-    if (OP.dl.running) return;
-    if (!token) { toast('Link your Discord session first.', 'err'); switchTab('prune'); return; }
-    const src = DL.src;
-    const rawId = dlEl('pc-dl-ch').value.trim() || (src === 'server' ? detectGuildId() : detectChannelId()) || '';
-    if (!rawId) { toast(src === 'server' ? 'Enter or detect a server ID.' : 'Enter or detect a channel ID.', 'warn'); return; }
-    if (!dlEl('pc-dl-all').checked && !dlEl('pc-dl-after').value && !dlEl('pc-dl-before').value) {
-      toast('Pick a date range or switch on Everything.', 'warn');
-      return;
-    }
-    if (!userId) await resolveUser();
-    const kw = dlEl('pc-dl-kw').value.trim();
-    const o = {
-      after: dlEl('pc-dl-all').checked || !dlEl('pc-dl-after').value ? null : new Date(dlEl('pc-dl-after').value + 'T00:00:00'),
-      before: dlEl('pc-dl-all').checked || !dlEl('pc-dl-before').value ? null : new Date(dlEl('pc-dl-before').value + 'T23:59:59.999'),
-      mine: dlEl('pc-dl-mine').checked,
-      skipBots: dlEl('pc-dl-bots').checked,
-      att: dlEl('pc-dl-att').checked,
-      emb: dlEl('pc-dl-embeds').checked,
-      author: dlEl('pc-dl-author').value.trim() || null,
-      matcher: kw ? buildKeywordMatcher(kw) : null,
-      max: Math.max(0, parseInt(dlEl('pc-dl-max').value, 10) || 0),
+  function initDownloadTab() {
+    if (!dlEl('pc-dl-start')) return;
+    const srcBox = shadow.getElementById('pc-dl-src');
+    const setSrc = mode => {
+      DL.src = mode;
+      srcBox.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.dataset.src === mode));
+      dlEl('pc-dl-ch').placeholder = mode === 'server' ? 'Server ID' : 'Channel ID';
+      dlEl('pc-dl-src-hint').textContent = mode === 'server'
+        ? 'Open any channel inside the server, then click refresh. Every text channel is included.'
+        : 'Open the channel or DM you want, then click refresh.';
     };
-    OP.dl.running = true; OP.dl.stop = false; OP.dl.pause = false;
-    DL.collected = []; DL.pages = 0; DL.skipped = 0; DL.channels = 0; DL.text = '';
-    if (DL.blobUrl) { URL.revokeObjectURL(DL.blobUrl); DL.blobUrl = ''; }
-    dlEl('pc-dl-result').classList.add('hidden');
-    dlEl('pc-dl-preview-card').classList.add('hidden');
-    dlEl('pc-dl-prog').classList.remove('hidden');
-    dlEl('pc-dl-fill').classList.add('run');
-    dlEl('pc-dl-log').innerHTML = '';
-    LOG_BUF.dl.length = 0;
-    dlEl('pc-dl-pause').disabled = false;
-    dlEl('pc-dl-pause').innerHTML = `${ic('pause',13)} Pause`;
-    dlEl('pc-dl-stop').disabled = false;
-    dlEl('pc-dl-start').disabled = true;
-    dlEl('pc-dl-cur').textContent = src === 'server' ? 'Listing channels' : 'Collecting messages';
-    dlEl('pc-dl-cur-ct').textContent = '';
-    dlUpdateCounters();
-    const startMs = Date.now();
-    const timer = setInterval(() => {
-      dlEl('pc-dl-elapsed').textContent = fmtElapsed(Date.now() - startMs);
-      const mins = (Date.now() - startMs) / 60000;
-      dlEl('pc-dl-rate').textContent = mins > 0 ? `${Math.round(DL.collected.length / mins)}/min` : '0/min';
-    }, 500);
-    L.info('pc-dl-log', LOG_BUF.dl, `Starting archive from ${src} ${rawId}${o.after ? ', after ' + o.after.toLocaleDateString() : ''}${o.before ? ', before ' + o.before.toLocaleDateString() : ''}${o.max ? ', limit ' + o.max : ''}`);
-    try {
-      if (src === 'server') {
-        const r = await dfetch(`/guilds/${rawId}/channels`);
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const chans = (await r.json()).filter(c => c.type === 0 || c.type === 5).sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
-        if (!chans.length) L.warn('pc-dl-log', LOG_BUF.dl, 'No text channels in that server.');
-        for (let i = 0; i < chans.length; i++) {
-          if (OP.dl.stop) break;
-          const ch = chans[i];
-          dlEl('pc-dl-cur').textContent = `#${ch.name || ch.id}`;
-          dlEl('pc-dl-cur-ct').textContent = `${i + 1} / ${chans.length}`;
-          L.info('pc-dl-log', LOG_BUF.dl, `Channel #${ch.name || ch.id}`);
-          await dlCollectChannel(ch.id, o, `#${ch.name || ch.id}`);
-          DL.channels = i + 1; dlUpdateCounters();
-          dlRenderPreview();
-          if (o.max && DL.collected.length >= o.max) break;
-        }
-      } else {
-        await dlCollectChannel(rawId, o, rawId);
-        DL.channels = 1; dlUpdateCounters();
-        dlRenderPreview();
-      }
-    } catch (e) {
-      L.err('pc-dl-log', LOG_BUF.dl, `Stopped with an error, ${e.message}`);
-    }
-    clearInterval(timer);
-    OP.dl.running = false;
-    OP.dl.pause = false;
-    dlEl('pc-dl-pause').disabled = true;
-    dlEl('pc-dl-stop').disabled = true;
-    dlEl('pc-dl-start').disabled = false;
-    dlEl('pc-dl-fill').classList.remove('run', 'paused');
-    dlEl('pc-dl-cur').textContent = OP.dl.stop ? 'Stopped' : 'Finished';
-    dlEl('pc-dl-cur-ct').textContent = '';
-    dlRenderPreview();
-    if (!DL.collected.length) {
-      dlEl('pc-dl-prog').classList.add('hidden');
-      toast('Nothing matched those filters.', 'warn');
-      return;
-    }
-    const fmt = dlEl('pc-dl-format').value;
-    const pretty = dlEl('pc-dl-pretty').checked;
-    const out = dlSerialize(fmt, pretty);
-    const mimes = { json: 'application/json', ndjson: 'application/x-ndjson', txt: 'text/plain', md: 'text/markdown', html: 'text/html', csv: 'text/csv' };
-    DL.text = out;
-    DL.ext = fmt;
-    if (DL.blobUrl) URL.revokeObjectURL(DL.blobUrl);
-    const blob = new Blob([out], { type: (mimes[fmt] || 'text/plain') + ';charset=utf-8' });
-    DL.blobUrl = URL.createObjectURL(blob);
-    const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
-    DL.fileName = `israelcord-${src}-${rawId}-${stamp}.${fmt}`;
-    dlEl('pc-dl-count').textContent = fmtNum(DL.collected.length);
-    dlEl('pc-dl-size').textContent = blob.size >= 1048576 ? `${(blob.size / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(blob.size / 1024))} KB`;
-    dlEl('pc-dl-result-hint').textContent = `${DL.fileName}, ${DL.pages} pages scanned, ${DL.skipped} skipped`;
-    dlEl('pc-dl-result').classList.remove('hidden');
-    dlEl('pc-dl-prog').classList.add('hidden');
-    dlSaveFile();
-    L.ok('pc-dl-log', LOG_BUF.dl, `Archive complete, ${DL.collected.length} messages saved as ${fmt}.`);
-    toast('Archive saved to your Downloads folder.', 'ok');
+    srcBox.addEventListener('click', e => {
+      const b = e.target.closest('.seg-btn');
+      if (b) setSrc(b.dataset.src);
+    });
+    setSrc('channel');
+    dlEl('pc-dl-detect').addEventListener('click', () => {
+      const id = DL.src === 'server' ? detectGuildId() : detectChannelId();
+      if (id) { dlEl('pc-dl-ch').value = id; toast('ID detected.', 'ok'); }
+      else toast(DL.src === 'server' ? 'Open a server channel first.' : 'Open a channel or DM first.', 'warn');
+    });
+    dlEl('pc-dl-all').addEventListener('change', () => {
+      dlEl('pc-dl-time').classList.toggle('hidden', dlEl('pc-dl-all').checked);
+    });
+    dlEl('pc-dl-format').addEventListener('change', () => {
+      const f = dlEl('pc-dl-format').value;
+      dlEl('pc-dl-format-hint').textContent = f === 'zip'
+        ? 'Media is saved inside the zip, so images, GIFs and videos keep working. Large archives take longer.'
+        : f === 'html'
+          ? 'Media uses Discord links, which expire after a while. Choose the ZIP option to keep the media itself.'
+          : 'Media links inside the file can expire. Choose the ZIP option if you want the media itself.';
+    });
+    dlEl('pc-dl-start').addEventListener('click', dlStartRun);
+    dlEl('pc-dl-stop').addEventListener('click', () => {
+      DL.stopped = true;
+      dlEl('pc-dl-stop').disabled = true;
+      dlEl('pc-dl-cur').textContent = 'Stopping';
+    });
   }
 
   function initDownloadTab() {
